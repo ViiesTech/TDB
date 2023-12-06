@@ -32,6 +32,8 @@ function MyTabs() {
               height: '100%',
               bordertopleftradius: 15,
               bordertoprightradius: 15,
+              borderWidth:0,
+              borderColor:'yellow'
             }}
           />
         ),
@@ -43,7 +45,7 @@ function MyTabs() {
         options={{
           headerShown: false,
           tabBarLabelStyle: {color: 'white', fontSize: hp('1.7%')},
-          tabBarStyle: {height: hp('8%'), backgroundColor: colors.bg},
+          tabBarStyle: {height: hp('8%'), backgroundColor: colors.bg, borderWidth:0,borderColor:'gray'},
           tabBarIcon: ({focused}) => {
             return (
               <Foundation
@@ -61,11 +63,11 @@ function MyTabs() {
         component={Explore}
         options={{
           headerShown: false,
-          tabBarLabelStyle: {color: 'white', fontSize: hp('1.6%')},
-          tabBarItemStyle: {borderTopWidth: 0},
+          tabBarLabelStyle: {color: 'white', fontSize: hp('1.6%'),},
+          tabBarStyle: {height: hp('8%'), backgroundColor: colors.bg},
           tabBarStyle: {
             height: hp('8%'),
-            // backgroundColor: colors.bg,
+            backgroundColor: colors.bg,
             elevation: 0,
           },
           tabBarIcon: ({focused}) => {

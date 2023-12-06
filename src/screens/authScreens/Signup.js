@@ -46,6 +46,7 @@ const Signup = ({navigation}) => {
         translucent={true}
         barStyle={'light-content'}
       />
+
       {showWelcome ? (
         <View
           style={{

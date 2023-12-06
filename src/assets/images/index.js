@@ -11,6 +11,8 @@ export default {
     bgSlide3: require('./bgSlide3.png'),
     bgSlide4: require('./bgSlide4.png'),
     bgHome: require('./bgHome.png'),
+    bgProfile: require('./bgProfile.png'),
+    bgExplore: require('./bgExplore.png'),
     movie1: require('./movie1.png'),
     movie2: require('./movie2.png'),
     movie3: require('./movie3.png'),
