@@ -6,8 +6,11 @@ import {StatusBar} from 'react-native';
 import AuthStack from './AuthStack';
 import MainStack from './MainStack';
 
+import { useSelector } from 'react-redux';
+
 const Routes = () => {
   const Stack = createStackNavigator();
+  const {token} = useSelector(state => state.authData);
 
   return (
     <NavigationContainer>
@@ -20,8 +23,13 @@ const Routes = () => {
       <Stack.Navigator
         screenOptions={{headerShown: false}}
         initialRouteName="AuthStack">
-        <Stack.Screen name="AuthStack" component={AuthStack} />
-        <Stack.Screen name="MainStack" component={MainStack} />
+        {
+          token ? (
+            <Stack.Screen name="MainStack" component={MainStack} />
+          ) : (
+            <Stack.Screen name="AuthStack" component={AuthStack} />
+          )
+        }
       </Stack.Navigator>
     </NavigationContainer>
   );

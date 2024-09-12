@@ -14,7 +14,9 @@ import LinearGradient from 'react-native-linear-gradient';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import Entypo from 'react-native-vector-icons/Entypo';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-const Explore = () => {
+
+
+const Explore = ({navigation}) => {
   const arry = [
     {id: 1, image: require('../../assets/images/1.png')},
     {id: 2, image: require('../../assets/images/2.png')},
@@ -69,7 +71,7 @@ const Explore = () => {
           contentContainerStyle={{alignSelf:'center'}}
           renderItem={({item}) => {
             return (
-              <TouchableOpacity style={{borderRadius: 200}} >
+              <TouchableOpacity style={{borderRadius: 200}} onPress={() => navigation.navigate('CreateAvatar')}>
                 <Image source={item.image} resizeMode='contain' style={{height:200, width:200}} />
               </TouchableOpacity>
             );

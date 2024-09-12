@@ -31,4 +31,10 @@ export default {
     artist5: require('./artist5.png'),
     artist6: require('./artist6.png'),
     artist7: require('./artist7.png'),
+    iconClothes: require('./iconClothes.png'),
+    iconEye: require('./iconEye.png'),
+    iconFace: require('./iconFace.png'),
+    iconFootwear: require('./iconFootwear.png'),
+    iconGlasses: require('./iconGlasses.png'),
+    iconHair: require('./iconHair.png')
 }

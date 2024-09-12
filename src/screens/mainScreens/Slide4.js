@@ -5,17 +5,20 @@ import {
   StyleSheet,
   Text,
   TouchableOpacity,
+  TextInput,
   View,
 } from 'react-native';
-import React, {useState, useRef, useLayoutEffect} from 'react';
+import React, {useState, useRef, useEffect, useLayoutEffect} from 'react';
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
 import AntDesign from 'react-native-vector-icons/AntDesign';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 import colors from '../../theme/colors';
 import images from '../../assets/images';
 import Button from '../../components/Button';
+import { FlatList } from 'react-native-gesture-handler';
 
 const imageSources = [
   images.movie1,
@@ -25,8 +28,10 @@ const imageSources = [
   images.movie5,
 ];
 
-const Slide4 = ({slider, navigation}) => {
+const Slide4 = ({slider, navigation, popularShows}) => {
   const [selectedImages, setSelectedImages] = useState([]);
+  const [searchInputText, setSearchInputText] = useState('');
+  const [filteredShows, setFilteredShows] = useState([]);
   const [screenIndex, setScreenIndex] = useState(0);
   const scrollViewRef = useRef(null);
 
@@ -56,6 +61,13 @@ const Slide4 = ({slider, navigation}) => {
     });
   };
 
+  useEffect(() => {
+    let filterResult = popularShows.filter(eachShow => {
+      return eachShow.title.toLowerCase().includes(searchInputText.toLowerCase());
+    })
+    setFilteredShows(filterResult)
+  }, [searchInputText])
+
 
   return (
     <ScrollView
@@ -74,21 +86,27 @@ const Slide4 = ({slider, navigation}) => {
       <View
         style={{
           width: wp('100%'),
-          height: hp('65%'),
+          height: hp('68%'),
           position: 'absolute',
           bottom: 0,
         }}>
         <Text
           style={{
-            width: wp('80%'),
+            width: wp('85%'),
             color: 'white',
             alignSelf: 'center',
-            textAlign: 'center',
-            fontSize: hp('3%'),
+            textAlign: 'left',
+            fontSize: hp('2.5%'),
             fontWeight: 'bold',
           }}>
           Select your three favourite TV Shows
         </Text>
+
+        <View style={{flexDirection: 'row', width: wp('90%'), alignSelf: 'center', alignItems: 'center', borderWidth: 1, marginTop: 10, borderColor: 'white', borderRadius: 250, padding: 5, paddingHorizontal: 15}}>
+          <TextInput value={searchInputText} onChangeText={(changedText) => setSearchInputText(changedText)} placeholder='Search Here...' placeholderTextColor={'white'} style={{width: '90%', color: 'white'}}  />
+          <Ionicons name='paper-plane-outline' size={25} color={'white'} />
+        </View>
+        
         <View
           style={{
             flexDirection: 'row',
@@ -116,17 +134,20 @@ const Slide4 = ({slider, navigation}) => {
         </View>
 
         <View style={{width: wp('100%'), height: 135, marginTop: 20}}>
-          <ScrollView horizontal={true} ref={scrollViewRef} >
-          {
-            imageSources.map((eachImage, index) => {
-              return (
-                <TouchableOpacity key={index} onPress={() => chooseImage(eachImage)} style={{margin: 10}}>
-                  <Image source={eachImage} style={{}} />
-                </TouchableOpacity>
-              )
-            })
-          }
-        </ScrollView>
+        <FlatList
+          ref={scrollViewRef}
+          data={filteredShows.length <= 0 ? popularShows : filteredShows}
+          horizontal={true}
+          key={item => item.id}
+          renderItem={({item}) => {
+            return (
+              <TouchableOpacity onPress={() => chooseImage(item.image.url)} style={{margin: 10, width: 150, height: 150, overflow:'hidden', borderRadius: 8}}>
+                <Image source={{uri: item.image.url}} style={{width: '100%', height: '100%', backgroundColor: 'lightgrey', objectFit: 'cover'}} />
+              </TouchableOpacity>
+            )
+          }}
+
+        />
           <View
             style={{
               width: wp('90%'),

@@ -4,6 +4,7 @@ import {
   ScrollView,
   StyleSheet,
   Text,
+  TextInput,
   TouchableOpacity,
   View,
 } from 'react-native';
@@ -13,6 +14,7 @@ import {
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
 import AntDesign from 'react-native-vector-icons/AntDesign';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 import colors from '../../theme/colors';
 import images from '../../assets/images';
 import Button from '../../components/Button';
@@ -76,21 +78,27 @@ const Slide3 = ({slider}) => {
       <View
         style={{
           width: wp('100%'),
-          height: hp('65%'),
+          height: hp('68%'),
           position: 'absolute',
           bottom: 0,
         }}>
         <Text
           style={{
-            width: wp('80%'),
+            width: wp('85%'),
             color: 'white',
             alignSelf: 'center',
-            textAlign: 'center',
-            fontSize: hp('3%'),
+            textAlign: 'left',
+            fontSize: hp('2.5%'),
             fontWeight: 'bold',
           }}>
           Select your three favourite music artists
         </Text>
+
+        <View style={{flexDirection: 'row', width: wp('90%'), alignSelf: 'center', alignItems: 'center', borderWidth: 1, marginTop: 10, borderColor: 'white', borderRadius: 250, padding: 5, paddingHorizontal: 15}}>
+          <TextInput placeholder='Search Here...' placeholderTextColor={'white'} style={{width: '90%', color: 'white'}}  />
+          <Ionicons name='paper-plane-outline' size={25} color={'white'} />
+        </View>
+        
         <View
           style={{
             flexDirection: 'row',

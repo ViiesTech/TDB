@@ -12,6 +12,7 @@ import Home from '../screens/mainScreens/Home';
 import Explore from '../screens/mainScreens/Explore';
 import Profile from '../screens/mainScreens/Profile';
 import LinearGradient from 'react-native-linear-gradient';
+import CreateAvatar from '../screens/mainScreens/CreateAvatar';
 
 import Foundation from 'react-native-vector-icons/Foundation';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -24,6 +25,7 @@ function MyTabs() {
   return (
     <Tab.Navigator
       screenOptions={{
+        tabBarHideOnKeyboard: true,
         headerShown: false,
         tabBarBackground: () => (
           <LinearGradient
@@ -110,6 +112,7 @@ const MainStack = () => {
     <Stack.Navigator screenOptions={{headerShown: false}}>
       <Stack.Screen name="StartingSlider" component={StartingSlider} />
       <Stack.Screen name="MyTabs" component={MyTabs} />
+      <Stack.Screen name="CreateAvatar" component={CreateAvatar} />
     </Stack.Navigator>
   );
 };

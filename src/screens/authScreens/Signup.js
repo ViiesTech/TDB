@@ -5,6 +5,7 @@ import {
   StatusBar,
   Image,
   ImageBackground,
+  ActivityIndicator,
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
 import colors from '../../theme/colors';
@@ -16,9 +17,13 @@ import {
 import Input from '../../components/Input';
 import Button from '../../components/Button';
 import {ScrollView} from 'react-native-gesture-handler';
+import BackIcon from '../../components/BackIcon';
+import BaseUrl from '../../utils/BaseUrl';
+import Toast from 'react-native-toast-message';
+import axios from 'axios';
 
 const Signup = ({navigation}) => {
-  const [showWelcome, setShowWelcome] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [form, setForm] = useState({
     name: '',
     email: '',
@@ -30,11 +35,95 @@ const Signup = ({navigation}) => {
     setForm({...form, [key]: changedText});
   };
 
-  useEffect(() => {
-    setTimeout(() => {
-      setShowWelcome(false);
-    }, 1500);
-  }, []);
+  const validateEmail = (email) => {
+    return String(email)
+      .toLowerCase()
+      .match(
+        /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+      );
+  };
+  const validatePassword = (password) => {
+    return String(password)
+      .toLowerCase()
+      .match(
+        /^(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{6,16}$/
+      );
+  };
+
+
+  const handleSignup = () => {
+    let data = new FormData();
+    data.append('name', form.name);
+    data.append('email', form.email);
+    data.append('password', form.password);
+    data.append('confirm_password', form.confirmPassword);
+    data.append('type', 'user');
+
+    let config = {
+      method: 'post',
+      url: `${BaseUrl}/api/register`,
+      headers: {
+        'Content-Type': 'multipart/form-data'
+      },
+      data: data,
+    };
+
+    if (form.password === form.confirmPassword) {
+      if (form.name && form.email && form.password && form.confirmPassword) {
+        if(validateEmail(form.email)){
+          if(validatePassword(form.password)){
+            setLoading(true)
+            axios
+            .request(config)
+            .then(response => {
+              setLoading(false)
+              if (response.data.success) {
+                Toast.show({
+                  type: 'success',
+                  text1: 'Successfully Signed up',
+                  text2: 'You can now log into your account 😊',
+                });
+                navigation.navigate('Login');
+              } else {
+                Toast.show({
+                  type: 'error',
+                  text1: response.data.message,
+                });
+              }
+            })
+            .catch(error => {
+              setLoading(false)
+              Toast.show({
+                type: 'error',
+                text1: error.message,
+              });
+            });
+          }else {
+            Toast.show({
+              type: 'error',
+              text1: 'Invalid Password',
+              text2: 'Atleast six characters with a letter, a symbol and a number is required!'
+            })
+          }
+        }else {
+          Toast.show({
+            type: 'error',
+            text1: 'Please enter a valid email and password!'
+          })
+        }
+      } else {
+        Toast.show({
+          type: 'error',
+          text1: "You can't leave any field empty!",
+        });
+      }
+    } else {
+      Toast.show({
+        type: 'error',
+        text1: 'Password and Confirm Password does not match 🥲',
+      });
+    }
+  };
 
   return (
     <ImageBackground
@@ -47,22 +136,8 @@ const Signup = ({navigation}) => {
         barStyle={'light-content'}
       />
 
-      {showWelcome ? (
-        <View
-          style={{
-            width: wp('100%'),
-            height: hp('100%'),
-            backgroundColor: colors.secondary,
-            justifyContent: 'center',
-            alignItems: 'center',
-            position: 'absolute',
-            top: 0,
-            left: 0,
-            zIndex: 100,
-          }}>
-          <Image source={images.logo} />
-        </View>
-      ) : null}
+      <BackIcon onPress={() => navigation.goBack()} />
+
       <ScrollView contentContainerStyle={{flexGrow: 1, flexDirection: 'row'}}>
         <View
           style={{width: wp('100%'), height: hp('78%'), alignSelf: 'flex-end'}}>
@@ -79,8 +154,8 @@ const Signup = ({navigation}) => {
                 fontSize: hp('4%'),
                 width: '75%',
                 alignSelf: 'flex-start',
-                position:'absolute',
-                bottom: 120
+                position: 'absolute',
+                bottom: 120,
               }}>
               Sign up with email
             </Text>
@@ -126,8 +201,9 @@ const Signup = ({navigation}) => {
           />
 
           <Button
-            btnText={'Sign up'}
-            onPress={() => navigation.navigate('Login')}
+            btnText={loading ? <ActivityIndicator size={'small'} color={'white'} /> : 'Sign up'}
+            disabled={loading}
+            onPress={handleSignup}
             containerStyle={{marginTop: 30}}
           />
         </View>
